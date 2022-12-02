@@ -1,0 +1,13 @@
+[Unit]
+Description=My Mpd info service 
+After=multi-user.target
+[Service]
+Environment="MPD_HOST=192.168.178.3"
+Environment="LISTEN_ON=192.168.178.3"
+Description=My Mpd info service
+Type=simple
+Restart=always
+WorkingDirectory=/srv/mpdinfoservice
+ExecStart=/usr/bin/python3 -u /srv/mpdinfoservice/mpdinfoservice.py
+[Install]
+WantedBy=multi-user.target

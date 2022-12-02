@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript">
+     var ws = new WebSocket("ws://{{ listen_on }}:{{ ws_port }}/websocket");
+     ws.onopen = function() {
+         ws.send("Hello, world");
+     };
+     ws.onmessage = function (evt) {
+         // alert(evt.data);
+         var msg = JSON.parse(evt.data)
+
+         switch(msg.type) {
+             case "string":
+                 document.getElementById("info").innerHTML = msg.text  ;
+                 break;
+             case "pict":
+                 document.getElementById("bild").src = "img/"+new Date().getTime();
+                 break;
+         }
+     };
+
+     function sendMyMessages(m) {
+         ws.send("Hi, from the client. " + m );
+     }
+     function onWebSocketClosed(){
+     console.log ("called")
+           if (ws.readyState != WebSocket.OPEN) {
+               try{
+                   console.error("ws is not open: " + ws.readyState +"Reloading Page");
+                   window.location.reload()
+               }
+               catch (error) {
+                   console.log('onWebSocketClosed :  {0}' , error)
+               }
+           }
+     else {
+     console.log ("hier") 
+                 setTimeout(function () {
+                      onWebSocketClosed()
+                                        }, 10000)
+               }
+     }
+
+     
+     setTimeout(function () {
+          onWebSocketClosed()
+     }, 10000)
+
+    </script>
+    <style>
+      .grid-container {
+      display: flex;
+      }
+      .grid-item {
+      float: top;
+      flex: 1 1 0px ;
+      }
+      body {
+      max-width: 750px;
+      color: #BF8230;
+      background-color: #000000;
+      }
+    </style>
+    <title> MPD now playing</title>
+  </head>
+  <body>
+    <div class="grid-container"> 
+    <div class="grid-item">
+      <img id="bild" src="img" width="300" height="300" alt="cover"></img>
+    </div>
+    <div class="grid-item">
+      <p id="info"> </p>
+    </div>
+    </div> 
+  </body>
+</html>

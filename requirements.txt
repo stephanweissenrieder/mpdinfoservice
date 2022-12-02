@@ -1,0 +1,4 @@
+bottle
+python-mpd2
+pillow
+gevent-websocket
